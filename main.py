@@ -22,17 +22,15 @@ def GetFormattedProxy(proxy):
 def update():
     global total, success, failed, ips
     speed = round(total / ((time.time() - start) / 60))
-    ctypes.windll.kernel32.SetConsoleTitleW("[ipv4.games] | Total Requests: %s | Success: %s | Failed: %s | IPs: %s | R/S: %s" % (total, success, failed, ips, speed))
+    ctypes.windll.kernel32.SetConsoleTitleW("[ipv4.games] | Total Requests: %s | Success: %s | Failed: %s | IPs: %s | CPM: %s" % (total, success, failed, ips, speed))
 
 def claim():
     try:
         global total, success, failed
         total += 1
         update()
-        proxy = GetFormattedProxy("161.129.152.226:42277")
-        # proxy = {'http': "161.129.152.226:42277"}
-        # proxy = {'http': 'http://%s' % ip}
-        client = httpx.Client(timeout=3, proxies={"all://": f"http://{proxy}"})
+        proxy = open("proxies.txt", "r").readlines()
+        client = httpx.Client(timeout=3, proxies={"http://": f"http://{proxy}"})
         r = client.get("https://ipv4.games/claim?name=exploit")
         idk = r.text.split("\n")
         idk = idk[1].replace("<title>", "").replace("</title>", "")
